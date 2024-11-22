@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cancer Screening Flashcards</title>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      height: 100vh;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .flashcard {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+      margin-bottom: 20px;
+    }
+
+    .flashcard p {
+      font-size: 18px;
+      color: #333;
+      margin: 0;
+    }
+
+    .button {
+      background-color: #007bff;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin: 5px;
+    }
+
+    .button:hover {
+      background-color: #0056b3;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .fade {
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div id="flashcard" class="flashcard fade">
+    <p id="content">Loading...</p>
+  </div>
+  <button class="button" onclick="showPreviousCard()">Back</button>
+  <button class="button" onclick="flipCard()">Flip</button>
+  <button class="button" onclick="showNextCard()">Next</button>
+</div>
+
+<script>
+  const flashcards = [
+    { question: "What is the role of vaccination in cancer prevention?", answer: "Vaccines like HPV and hepatitis B prevent infections that can lead to cervical and liver cancers." },
+    { question: "How does obesity contribute to cancer risk?", answer: "Obesity promotes inflammation, hormone imbalances, and insulin resistance, increasing cancer risk." },
+    { question: "What are the goals of secondary prevention in cancer?", answer: "Secondary prevention detects and treats precancerous changes early, preventing progression to invasive cancer." },
+    { question: "Why is colorectal cancer screening essential, and what are the methods?", answer: "Detects early cancer and precancerous polyps; methods include FIT, colonoscopy, and sigmoidoscopy." },
+    { question: "What are modifiable lifestyle factors that reduce cancer risk?", answer: "Avoiding tobacco, limiting alcohol, staying active, maintaining a healthy weight, and eating a plant-based diet." },
+    { question: "How does breast density impact mammography effectiveness?", answer: "Dense breast tissue reduces mammogram sensitivity, so additional imaging like ultrasound or MRI may be needed." },
+    { question: "What is the difference between relative risk and absolute risk in cancer prevention?", answer: "Relative risk compares groups, while absolute risk measures the probability of developing cancer in a population." },
+    { question: "What is the importance of low-dose CT in lung cancer screening?", answer: "Low-dose CT scans detect early lung cancer while minimizing radiation exposure, improving survival in high-risk individuals." },
+    { question: "How does physical activity help in cancer prevention?", answer: "Physical activity lowers cancer risk by reducing inflammation, regulating hormone levels, and improving immune function." },
+    { question: "What are the criteria for high-risk breast cancer screening?", answer: "High-risk individuals include those with BRCA mutations, family history of cancer, or prior chest radiation exposure." },
+    { question: "What are barriers to cancer screening participation?", answer: "Barriers include lack of awareness, fear of results, cultural differences, and logistical or financial constraints." },
+    { question: "How does tobacco use increase cancer risk?", answer: "Tobacco contains carcinogens that damage DNA, leading to mutations and increasing risk for multiple cancers like lung and oral cancer." },
+    { question: "What is the significance of programmatic screening?", answer: "Programmatic screening ensures consistent quality control and follow-up care, reducing disparities compared to opportunistic screening." },
+    { question: "How does alcohol consumption affect cancer risk?", answer: "Alcohol increases cancer risk by metabolizing into acetaldehyde, a carcinogen, and altering hormone levels, promoting tumor growth." },
+    { question: "What are the key recommendations for cervical cancer screening?", answer: "Pap tests every 3 years for women aged 25–65, or HPV testing every 5 years. Stop screening after 65 if prior results were normal." },
+    { question: "Why is chemoprevention controversial in some cases?", answer: "Side effects like thromboembolism and ethical concerns over prescribing preventive medication for asymptomatic individuals make it controversial." },
+    { question: "What are the key cancer screening guidelines for prostate cancer?", answer: "PSA testing should be discussed with high-risk men; routine screening is not universally recommended." },
+    { question: "What is the role of genetic testing in cancer prevention?", answer: "Genetic testing identifies individuals with hereditary cancer risks, allowing personalized screening and preventive strategies." },
+    { question: "How does early detection of cancer improve survival rates?", answer: "Early detection identifies cancer at treatable stages, reducing mortality and improving outcomes through regular screenings." },
+    { question: "What is the role of dietary fiber in colorectal cancer prevention?", answer: "Dietary fiber reduces risk by promoting healthy digestion, diluting carcinogens, and supporting gut microbiota." }
+  ];
+
+  let currentCard = 0;
+  let showingQuestion = true;
+
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  function showNextCard() {
+    currentCard = (currentCard + 1) % flashcards.length;
+    showingQuestion = true;
+    updateCardContent();
+  }
+
+  function showPreviousCard() {
+    currentCard = (currentCard - 1 + flashcards.length) % flashcards.length;
+    showingQuestion = true;
+    updateCardContent();
+  }
+
+  function flipCard() {
+    showingQuestion = !showingQuestion;
+    updateCardContent();
+  }
+
+  function updateCardContent() {
+    const flashcardDiv = document.getElementById("flashcard");
+    const card = flashcards[currentCard];
+    flashcardDiv.classList.add("hidden");
+
+    setTimeout(() => {
+      flashcardDiv.classList.remove("hidden");
+      flashcardDiv.classList.add("fade");
+
+      document.getElementById("content").textContent = showingQuestion ? card.question : card.answer;
+    }, 300);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    shuffle(flashcards);
+    updateCardContent();
+  });
+</script>
+
+</body>
+</html>
